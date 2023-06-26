@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <button id="cx-btn">Customer</button>
+    <button id="third-btn">3rd party</button>
+    <button id="dealer-btn">Dealer</button>
+    <button id="attorney-btn">Attorney</button>
+    
+    <form id="form-customer">
+        <label id="spk-label">SPK:</label>
+        <input id="spk-input" type="text">
+        <br/>
+        <label id="vrf-label">VRF</label>
+        <select id="vrf-input">
+            <option value="SSN">SSN</option>
+            <option value="DOB">DOB</option>
+            <option value="ADD">ADD</option>
+            <option value="COL">COL</option>
+        </select>
+        <br/>
+        <label id="rfc-label">RFC</label>
+        <select id="rfc-input-dropdown">
+            <option value=""></option>
+            <option value="Make a payment">Make a payment</option>
+            <option value="Make a promise">Make a promise</option>
+            <option value="Wants DDC">Wants ddc</option>
+            <option value="Wants an ext">Wants ext</option>
+            <option value="Wants info">Wants info about</option>
+        </select>
+        <input id="manual-rfc" type="text">
+        <br/>
+        <label id="m-label">M:</label>
+        <select id="m-input">
+            <option selected value=""></option>
+            <option value="Bank Account">Bank Account</option>
+            <option value="Debit">Debit</option>
+        </select>
+        <br/>
+        <label id="a-label">A: $</label>
+        <input id="a-input" type="text">
+        <br/>
+        <label id="d-label">D:</label>
+        <input id="d-input" type="date">
+        <br/>
+        <label id="c-label">C#</label>
+        <input id="c-input" type="text">
+        <br/>
+        <label id="rfd-label">RFD</label>
+        <input id="rfd-input" type="text">
+        <br/>
+        <label id="demo-label">Demos:</label>
+        <select id="demo-input">
+            <option selected value=""></option>
+            <option value="Verified">Verified</option>
+            <option value="Updated">Updated</option>
+        </select>
+        <br/>
+        <label id="acc-label">My Acc:</label>
+        <select id="acc-input">
+            <option selected value=""></option>
+            <option value="Sent">Sent</option>
+        </select>   
+        <br/>
+        <label id="ppr-label">Paperless:</label>
+        <select id="ppr-input">
+            <option selected value=""></option>
+            <option value="Sent">Sent</option>
+        </select>  
+        <br/>
+        <label id="ach-label">ACH:</label>
+        <select id="ach-input">
+            <option selected value=""></option>
+            <option value="Offered">Offered</option>
+            <option value="Enrolled">Enrolled</option>
+        </select>  
+        <button id="buttonSubmit" type="submit">Copy</button>    
+    </form>
+
+    <form id="form-third" style="display: none;">
+        <label for="form-third-name">Name</label>
+        <input type="text">
+        <label for="form-third-relation">Relationship</label>
+        <input type="text">
+    </form>
+
+    <p id="feedback"></p>
+    <p id="copied-message" style="display: none;">Copiado!</p>
+
+    <script>
+        let formCustomer = document.querySelector("#form-customer");
+        let formThird = document.querySelector("#form-third");
+        formCustomer.style.visibility = "hidden"; // Oculta el formulario del cliente inicialmente
+
+        let cxBtn = document.querySelector("#cx-btn");
+        cxBtn.addEventListener('click', () => {
+            formCustomer.style.visibility = "visible"; // Muestra el formulario del cliente al hacer clic en el botón
+            formThird.style.display = "none"; // Oculta el formulario de terceros
+        });
+
+        let thirdBtn = document.querySelector("#third-btn");
+        thirdBtn.addEventListener('click', () => {
+            formThird.style.display = "block"; // Muestra el formulario de terceros al hacer clic en el botón
+            formCustomer.style.visibility = "hidden"; // Oculta el formulario del cliente
+        });
+
+        let spkLabel = document.querySelector("#spk-label");
+        let spkInput = document.querySelector("#spk-input");
+        let vrfLabel = document.querySelector("#vrf-label");
+        let vrfInput = document.querySelector("#vrf-input");
+        let mLabel = document.querySelector("#m-label");
+        let minput = document.querySelector("#m-input");
+        let aLabel = document.querySelector("#a-label");
+        let aInput = document.querySelector("#a-input");
+        let dLabel = document.querySelector("#d-label");
+        let dInput = document.querySelector("#d-input");
+        let rfcLabel = document.querySelector("#rfc-label");
+        let rfcInputDropdown = document.querySelector("#rfc-input-dropdown");
+        let rfcInputText = document.querySelector("#manual-rfc");
+        let rfdLabel = document.querySelector("#rfd-label");
+        let rfdInput = document.querySelector("#rfd-input");
+        let cLabel = document.querySelector("#c-label");
+        let cInput = document.querySelector("#c-input");
+        let demoLabel = document.querySelector("#demo-label");
+        let demoInput = document.querySelector("#demo-input");
+        let accLabel = document.querySelector("#acc-label");
+        let accInput = document.querySelector("#acc-input");
+        let pprLabel = document.querySelector("#ppr-label");
+        let pprInput = document.querySelector("#ppr-input");
+        let achLabel = document.querySelector("#ach-label");
+        let achInput = document.querySelector("#ach-input");
+        let buttonSubmit = document.querySelector("#buttonSubmit");
+        let feedback = document.querySelector("#feedback");
+        let copiedMessage = document.querySelector("#copied-message");
+
+        rfcInputDropdown.addEventListener('change', () => {
+            if (rfcInputDropdown.value === "") {
+                rfcInputText.removeAttribute('disabled');
+            } else {
+                rfcInputText.setAttribute('disabled', true);
+            }
+        });
+
+        buttonSubmit.addEventListener('click', (e) => {
+          e.preventDefault(); // Evita que se envíe el formulario
+
+          // Obtener el contenido de cada campo del formulario
+          let spk = spkInput.value;
+          let vrf = vrfInput.value;
+          let m = minput.value;
+          let a = aInput.value.replace("$", ""); // Remover el signo "$" del campo "A"
+          let d = dInput.value;
+          let rfc = rfcInputDropdown.value || rfcInputText.value;
+          let rfd = rfdInput.value;
+          let c = cInput.value;
+          let demo = demoInput.value;
+          let acc = accInput.value;
+          let ppr = pprInput.value;
+          let ach = achInput.value;
+
+          // Construir el texto a copiar
+          let copiedText = "";
+
+          // Agregar campos al texto solo si tienen valor seleccionado o ingresado
+          if (spk) copiedText += `SPK: ${spk}\n`;
+          if (vrf) copiedText += `VRF: ${vrf}\n`;
+          if (m) copiedText += `M: ${m}\n`;
+          if (a) copiedText += `A: ${a}\n`;
+          if (d) copiedText += `D: ${formatDate(d)}\n`;
+          if (rfc) copiedText += `RFC: ${rfc}\n`;
+          if (rfd) copiedText += `RFD: ${rfd}\n`;
+          if (c) copiedText += `C#: ${c}\n`;
+          if (demo) copiedText += `Demos: ${demo}\n`;
+          if (acc) copiedText += `My Acc: ${acc}\n`;
+          if (ppr) copiedText += `Paperless: ${ppr}\n`;
+          if (ach) copiedText += `ACH: ${ach}\n`;
+
+          navigator.clipboard.writeText(copiedText) // Copiar al portapapeles
+            .then(() => {
+              copiedMessage.style.display = "block"; // Mostrar el mensaje "Copiado!"
+              feedback.textContent = ""; // Limpiar cualquier mensaje de error anterior
+            })
+            .catch((error) => {
+              feedback.textContent = "Error al copiar"; // Mostrar mensaje de error
+              console.log(error);
+            });
+        });
+
+        // Función para formatear la fecha a MM/DD/AAAA
+        function formatDate(dateString) {
+          const date = new Date(dateString);
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          return `${month}/${day}/${year}`;
+        }
+    </script>
+</body>
+</html>
